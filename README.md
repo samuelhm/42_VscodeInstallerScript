@@ -1,64 +1,97 @@
+# 42 VS Code Installer Script
 
-# Visual Studio Code Installer and Uninstaller Scripts for 42 Linux users
+![Shell Script](https://img.shields.io/badge/Shell_Script-121011?style=for-the-badge&logo=gnu-bash&logoColor=white)
+![Zsh](https://img.shields.io/badge/Zsh-4EAA25?style=for-the-badge&logo=Zshell&logoColor=white)
+![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
+![42 School](https://img.shields.io/badge/42_School-000000?style=for-the-badge&logo=42&logoColor=white)
 
-This repository contains two scripts to easily install and uninstall Visual Studio Code on a Linux system. The scripts are written in `zsh` and automate the setup of Visual Studio Code on a custom path and the creation of a desktop entry for easy access.
+> Instalador automatizado de Visual Studio Code para el entorno de 42 Network. Descarga, configura e integra VS Code en el sistema sin requerir permisos de administrador.
 
-## Scripts
+---
 
-### Install.sh
+## Características Principales
 
-The `Install.sh` script downloads, extracts, and installs Visual Studio Code in a specific directory, sets up a desktop shortcut, and creates a command for launching it from the terminal.
+- Instalación automatizada de VS Code desde el servidor oficial (última versión estable)
+- Integración completa con el entorno de escritorio Linux (GNOME/KDE)
+- Acceso directo en el escritorio y menú de aplicaciones
+- Comando `code` disponible en terminal
+- Desinstalación limpia y completa
+- Funciona sin permisos root en espacios de usuario (`/sgoinfre`)
 
-#### What the script does:
+## Stack Tecnológico
 
-1. Downloads the stable version of Visual Studio Code for Linux (x64) as a `.tar.gz` file from the [official Visual Studio Code download page](https://code.visualstudio.com/download).
-2. Extracts the downloaded archive.
-3. Moves the extracted VS Code folder to `/sgoinfre/students/$USER/code`.
-4. Cleans up by removing the `.tar.gz` file.
-5. Creates a `vscode.desktop` file that acts as a shortcut for launching Visual Studio Code.
-6. Copies the desktop shortcut to your desktop and the local applications folder.
-7. Adds a custom `code` command to your `.zshrc` file for launching VS Code from the terminal.
-8. Reloads the shell configuration to apply the changes.
+| Categoría | Tecnología |
+|-----------|------------|
+| Shell Scripting | Zsh |
+| Descarga de binarios | GNU Wget |
+| Descompresión | tar |
+| Integración Desktop | XDG Desktop Entry Standard |
 
-#### Usage:
+## Decisiones Técnicas / Arquitectura
 
-To install Visual Studio Code, simply run the following command:
+Este proyecto resuelve un problema específico del entorno 42 Network: las máquinas de los clusters se reinician periódicamente, eliminando cualquier software instalado localmente. Además, los estudiantes no tienen permisos de administrador.
+
+La arquitectura aprovecha el directorio `/sgoinfre/students/$USER`, un espacio de almacenamiento persistente entre reinicios, para instalar VS Code de forma portable. El uso de `nohup` con redirección a `/dev/null` garantiza que el editor se ejecuta como proceso independiente del terminal, evitando bloqueos de sesión. La creación dinámica del archivo `.desktop` cumple con los estándares XDG para máxima compatibilidad entre entornos de escritorio Linux.
+
+```mermaid
+flowchart TB
+    subgraph Instalación["Instalación (install.sh)"]
+        A[Usuario ejecuta install.sh] --> B[Descarga VS Code<br/>wget]
+        B --> C[Descomprimir tar.gz]
+        C --> D[Guardar en /sgoinfre/code]
+        D --> E[Crear vscode.desktop]
+        E --> F[Copiar a Desktop y Applications]
+        F --> G[Añadir función code a .zshrc]
+    end
+
+    subgraph Componentes["Componentes Creados"]
+        G --> H[Binarios del editor<br/>/sgoinfre/code/]
+        F --> I[Acceso directo GUI<br/>~/Desktop/]
+        F --> J[Menú aplicaciones<br/>~/.local/share/applications/]
+        G --> K[CLI wrapper function<br/>~/.zshrc]
+    end
+
+    subgraph Desinstalación["Desinstalación (uninstall.sh)"]
+        L[ejecuta uninstall.sh] --> M[Eliminar /sgoinfre/code]
+        M --> N[Eliminar .desktop files]
+        N --> O[Limpiar función en .zshrc]
+    end
+```
+
+## Guía de Instalación
 
 ```bash
+# Clonar el repositorio
+git clone https://github.com/samuelhm/42_VscodeInstallerScript.git
+cd 42_VscodeInstallerScript
+
+# Dar permisos de ejecución
+chmod +x install.sh uninstall.sh
+
+# Instalar VS Code
 ./install.sh
 ```
 
-### Uninstall.sh
+### Verificar Instalación
 
-The `uninstall.sh` script removes Visual Studio Code, the desktop shortcut, and the custom terminal command created during the installation process.
+```bash
+# Verificar que está instalado
+code --version
 
-#### What the script does:
+# Abrir VS Code desde terminal
+code .
+```
 
-1. Removes the Visual Studio Code directory from `/sgoinfre/students/$USER/code`.
-2. Deletes the desktop shortcut from both the Desktop and the local applications folder.
-3. Removes the custom `code` command from your `.zshrc`.
-4. Reloads the shell configuration to apply the changes.
-
-#### Usage:
-
-To uninstall Visual Studio Code, simply run the following command:
+### Desinstalar
 
 ```bash
 ./uninstall.sh
 ```
 
-## Requirements
+---
 
-- You must have `zsh` installed as your shell.
-- Internet connection to download Visual Studio Code.
-- Ensure you have write permissions to the `/sgoinfre/students/$USER/` directory.
+## Contacto
 
-## Notes
-
-- The script installs Visual Studio Code in the `/sgoinfre/students/$USER/code` directory. You can modify the script if you wish to change the installation path.
-- The script adds a `code` function to your `.zshrc`, allowing you to run Visual Studio Code using the `code` command.
-- The desktop shortcut will be available on both your Desktop and in your applications menu.
-
-## 💬 Let's Connect
-- **LinkedIn**: [Samuel Hurtado Marín](https://www.linkedin.com/in/samuel-marin-35b85342/)
-- **GitHub**: [samuelhm](https://github.com/samuelhm)
+[![GitHub](https://img.shields.io/badge/GitHub-samuelhm-181717?style=flat-square&logo=github)](https://github.com/samuelhm/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-shurtado--m-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/shurtado-m/)
