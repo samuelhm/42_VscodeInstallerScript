@@ -1,6 +1,6 @@
 #!/bin/zsh
 cd /sgoinfre/students/$USER
-wget --output-document=code.tar.gz https://code.visualstudio.com/sha/download\?build\=stable\&os\=linux-x64
+wget --output-document=code.tar.gz https://vscode.download.prss.microsoft.com/dbazure/download/stable/125df4672b8a6a34975303c6b0baa124e560a4f7/code-stable-x64-1784074852.tar.gz
 tar -xvf code.tar.gz
 mv VSCode-linux-x64 /sgoinfre/students/$USER/code
 rm code.tar.gz
